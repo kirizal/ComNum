@@ -45,31 +45,36 @@ public class ConProgressBar extends ConControl
 
 		if(this.getWidth() >= 15)
 		{
-			output = String.format("%3d%% [%s%s", this.Percentage, this.getBackgroundColor(), this.getForegroundColor());
+			output = String.format("%3d%% [%s%s",
+					this.Percentage,
+					this.getBackgroundColor().getANSI_Color(),
+					this.getForegroundColor().getANSI_Color());
 			sb = new StringBuilder(output);
-
-			freeBlocks = this.getWidth() - 1 - 7;			// 7 - кол-во символов на вывод процентажа 
-															// загрузки и границ ProgressBar'a
+			freeBlocks = this.getWidth() - 1 - 7;		// 7 - кол-во символов на вывод процентажа
+														// загрузки и границ ProgressBar'a
 			blockCount = (int)((double)this.Percentage/(double)MAX_PERCENTAGE * (double)freeBlocks);
+
 			// Добавление символов, характеризующих загрузку
 			for(int i = 0; i <= blockCount; i++)
 			{
 				sb.insert(sb.length(), Completed_block);
 			}
 			// Добавление символов пробела (для обозначения незаполненности ProgressBar'a)
-			for(int j = 7 + blockCount; j < this.getWidth() - 1; j++) 	// 7 - кол-во символов на вывод процентажа загрузки и границ ProgressBar'a
+			for(int j = 7 + blockCount; j < this.getWidth() - 1; j++)
 			{
 				sb.insert(sb.length(), Empty_block);
 			}
-			sb.insert(sb.length(), ConColor.ANSI_RESET + "]");
+			sb.insert(sb.length(), ConColor.ANSI_RESET.getANSI_Color() + "]");
 		}
 		else
 		{
-			output = String.format("%3d%%%s", this.Percentage, ConColor.ANSI_RESET);
+			output = String.format("%3d%%%s",
+					this.Percentage,
+					ConColor.ANSI_RESET.getANSI_Color());
 			sb = new StringBuilder(output);
 		}
 
 
-		System.out.print(sb.toString());
+		System.out.print(sb);
 	}
 }
