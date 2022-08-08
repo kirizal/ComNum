@@ -1,7 +1,6 @@
 package ConsoleUtils;
 
-public enum ConColor
-{
+public enum ConColor {
 	ANSI_RESET("\u001B[0m"),
 
     ANSI_FOREGROUND_BLACK("\u001B[30m"),
@@ -28,38 +27,10 @@ public enum ConColor
 	public String getANSI_Color() {
 		return this.ANSI_Color;
 	}
-	public void setANSI_Color(String ansi_color) throws Exception{
-		if(ColorCheck(ansi_color)) {
+	public void setANSI_Color(String ansi_color) {
 			this.ANSI_Color = ansi_color;
-		}
-		else {
-			throw new Exception("Unknown ansi_color, try using ConColor enumeration colors.");
-		}
 	}
 	ConColor(String ansi_color) {
 		this.ANSI_Color = ansi_color;
-	}
-
-
-
-	public static boolean ColorCheck(String ansi_color)
-	{
-		return ansi_color == ANSI_RESET.getANSI_Color() ||
-				ansi_color == ANSI_FOREGROUND_BLACK.getANSI_Color() ||
-				ansi_color == ANSI_FOREGROUND_RED.getANSI_Color() ||
-				ansi_color == ANSI_FOREGROUND_GREEN.getANSI_Color() ||
-				ansi_color == ANSI_FOREGROUND_YELLOW.getANSI_Color() ||
-				ansi_color == ANSI_FOREGROUND_BLUE.getANSI_Color() ||
-				ansi_color == ANSI_FOREGROUND_PURPLE.getANSI_Color() ||
-				ansi_color == ANSI_FOREGROUND_CYAN.getANSI_Color() ||
-				ansi_color == ANSI_FOREGROUND_WHITE.getANSI_Color() ||
-				ansi_color == ANSI_BACKGROUND_BLACK.getANSI_Color() ||
-				ansi_color == ANSI_BACKGROUND_RED.getANSI_Color() ||
-				ansi_color == ANSI_BACKGROUND_GREEN.getANSI_Color() ||
-				ansi_color == ANSI_BACKGROUND_YELLOW.getANSI_Color() ||
-				ansi_color == ANSI_BACKGROUND_BLUE.getANSI_Color() ||
-				ansi_color == ANSI_BACKGROUND_PURPLE.getANSI_Color() ||
-				ansi_color == ANSI_BACKGROUND_CYAN.getANSI_Color() ||
-				ansi_color == ANSI_BACKGROUND_WHITE.getANSI_Color();
 	}
 }

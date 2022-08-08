@@ -34,4 +34,7 @@ public class ConCursorMove {
         sb.insert(2, steps);
         System.out.print(sb);
     }
+
+    // Для невозможности создания объектов данного класса
+    private ConCursorMove() {}
 }
