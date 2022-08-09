@@ -4,7 +4,7 @@ import java.lang.Math;
 public class ComplexNumber {
 
 	private final ComplexNumberForm initial_form;
-	private double a_сoef;		//  \  Для алгебраической формы:
+	private double a_coef;		//  \  Для алгебраической формы:
 	private double b_coef;		//  /  z = a + b * i
 
 	private double r_coef;		//  \  Для тригонометрической и показательной форм:
@@ -13,12 +13,12 @@ public class ComplexNumber {
 
 
 
-	public double Re() { return this.a_сoef; }
+	public double Re() { return this.a_coef; }
 	public double Im() {return this.b_coef; }
 	public double Arg_deg() { return this.fi_angl_deg; }
 	public double Arg_rad() { return this.fi_angl_rad; }
 	public double AbsValue() { return this.r_coef; }
-	public ComplexNumber ComplexConjugate() { return new ComplexNumber(ComplexNumberForm.Rectangular, this.a_сoef, -this.b_coef); }
+	public ComplexNumber ComplexConjugate() { return new ComplexNumber(ComplexNumberForm.Rectangular, this.a_coef, -this.b_coef); }
 
 
 
@@ -26,51 +26,57 @@ public class ComplexNumber {
 		this.initial_form = f;
 		switch (this.initial_form) {
 			case Rectangular -> {
-				this.a_сoef = coef1;
+				this.a_coef = coef1;
 				this.b_coef = coef2;
-				this.r_coef = Math.sqrt(this.a_сoef * this.a_сoef + this.b_coef * this.b_coef);
-
-				// Определение угла fi в зависимости от четверти на комплексной плоскости
-				// Первая и четвёртая четверти
-				if (this.a_сoef > 0) {
-					this.fi_angl_rad = Math.atan(this.b_coef / this.a_сoef);
-				}
-				// Вторая четверть
-				else if (this.a_сoef < 0 && this.b_coef > 0) {
-					this.fi_angl_rad = Math.PI + Math.atan(this.b_coef / this.a_сoef);
-				}
-				// Третья четверть
-				else if (this.a_сoef < 0 && this.b_coef < 0) {
-					this.fi_angl_rad = -Math.PI + Math.atan(this.b_coef / this.a_сoef);
-				}
-				// Положительная часть мнимой оси
-				else if (this.a_сoef == 0 && this.b_coef > 0) {
-					this.fi_angl_rad = Math.PI / 2.0;
-				}
-				// Отрицательная часть мнимой оси
-				else if (this.a_сoef == 0 && this.b_coef < 0) {
-					this.fi_angl_rad = 3.0 * Math.PI / 2.0;
-				}
-				// Положительная часть реальной оси
-				else if (this.b_coef == 0 && this.a_сoef > 0) {
-					this.fi_angl_rad = 0.0;
-				}
-				// Отрицательная часть реальной оси
-				else if (this.b_coef == 0 && this.a_сoef < 0) {
-					this.fi_angl_rad = Math.PI;
-				}
-				this.fi_angl_deg = Math.toDegrees(this.fi_angl_rad) % 360;
-				// Поправка fi_angl_rad после удаления лишних периодов 2*PI*k
-				this.fi_angl_rad = Math.toRadians(this.fi_angl_deg);
+				this.r_coef = Math.sqrt(this.a_coef * this.a_coef + this.b_coef * this.b_coef);
+				this.fi_angl_rad = CalculateAngleInRadians(coef1, coef2);
+				this.fi_angl_deg = Math.toDegrees(this.fi_angl_rad);
 			}
 			case Polar, Exponential -> {
 				this.r_coef = coef1;
 				this.fi_angl_deg = coef2 % 360;
 				this.fi_angl_rad = Math.toRadians(this.fi_angl_deg);
-				this.a_сoef = this.r_coef * Math.sin(this.fi_angl_rad);
-				this.b_coef = this.r_coef * Math.cos(this.fi_angl_rad);
+				this.a_coef = this.r_coef * Math.cos(this.fi_angl_rad);
+				this.b_coef = this.r_coef * Math.sin(this.fi_angl_rad);
 			}
 		}
+	}
+
+
+
+	private static Double CalculateAngleInRadians(double coef_re, double coef_im){
+		double result;
+
+		// Определение угла fi в зависимости от четверти на комплексной плоскости
+		// Первая и четвёртая четверти
+		if (coef_re > 0) {
+			result = Math.atan(coef_im / coef_re);
+		}
+		// Вторая четверть
+		else if (coef_re < 0 && coef_im > 0) {
+			result = Math.PI + Math.atan(coef_im / coef_re);
+		}
+		// Третья четверть
+		else if (coef_re < 0 && coef_im < 0) {
+			result = -Math.PI + Math.atan(coef_im / coef_re);
+		}
+		// Положительная часть мнимой оси
+		else if (coef_re == 0 && coef_im > 0) {
+			result = Math.PI / 2.0;
+		}
+		// Отрицательная часть мнимой оси
+		else if (coef_re == 0 && coef_im < 0) {
+			result = 3.0 * Math.PI / 2.0;
+		}
+		// Положительная часть реальной оси
+		else if (coef_im == 0 && coef_re > 0) {
+			result = 0.0;
+		}
+		// Отрицательная часть реальной оси
+		else {
+			result = Math.PI;
+		}
+		return result;
 	}
 
 
@@ -81,10 +87,10 @@ public class ComplexNumber {
 	public String ToString(ComplexNumberForm form) {
 		switch(form) {
 			case Rectangular:
-				if(this.Im() > 0)
-					return String.format("%.3f + %.3f * i", this.a_сoef, this.b_coef);
+				if(this.Im() >= 0)
+					return String.format("%.3f + %.3f * i", this.a_coef, this.b_coef);
 				else
-					return String.format("%.3f - %.3f * i", this.a_сoef, Math.abs(this.b_coef));
+					return String.format("%.3f - %.3f * i", this.a_coef, Math.abs(this.b_coef));
 
 			case Polar:
 				return String.format("%.3f * (cos(%.3f°) + i * sin(%.3f°))", r_coef, this.fi_angl_deg, this.fi_angl_deg);
@@ -100,17 +106,31 @@ public class ComplexNumber {
 
 
 
-	public static void printAllForms(ComplexNumber num)
+	public static String getAllForms(ComplexNumber num)
 	{
-		try
-		{
-			System.out.printf("Rectangular:\t" + num.ToString(ComplexNumberForm.Rectangular) + "\n");
-			System.out.printf("Polar       \t" + num.ToString(ComplexNumberForm.Polar) + "\n");
-			System.out.printf("Exponential:\t" + num.ToString(ComplexNumberForm.Exponential) + "\n\n");
+		StringBuilder sb = new StringBuilder("");
+		sb.insert(sb.length(), String.format("Rectangular:\t" + num.ToString(ComplexNumberForm.Rectangular) + "\n"));
+		sb.insert(sb.length(), String.format("Polar       \t" + num.ToString(ComplexNumberForm.Polar) + "\n"));
+		sb.insert(sb.length(), String.format("Exponential:\t" + num.ToString(ComplexNumberForm.Exponential) + "\n\n"));
+		return sb.toString();
+	}
+
+
+
+	@Override
+	public boolean equals(Object obj){
+		if(obj instanceof ComplexNumber){
+			ComplexNumber temp = (ComplexNumber)obj;
+			return this.fi_angl_deg == temp.fi_angl_deg &&
+					this.r_coef == temp.r_coef;
 		}
-		catch(Exception ex)
-		{
-			System.out.println("\n" + ex.getMessage());
+		else if(obj instanceof Double){
+			Double temp = (Double) obj;
+			return this.a_coef == temp && this.b_coef == 0;
+		}
+		else{
+			return false;
 		}
 	}
+
 }
