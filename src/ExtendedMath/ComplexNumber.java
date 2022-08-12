@@ -18,7 +18,6 @@ public class ComplexNumber {
 	public double Arg_deg() { return this.fi_angl_deg; }
 	public double Arg_rad() { return this.fi_angl_rad; }
 	public double AbsValue() { return this.r_coef; }
-	public ComplexNumber ComplexConjugate() { return new ComplexNumber(ComplexNumberForm.Rectangular, this.a_coef, -this.b_coef); }
 
 
 
@@ -44,7 +43,7 @@ public class ComplexNumber {
 
 
 
-	private static Double CalculateAngleInRadians(double coef_re, double coef_im){
+	private static double CalculateAngleInRadians(double coef_re, double coef_im){
 		double result;
 
 		// Определение угла fi в зависимости от четверти на комплексной плоскости

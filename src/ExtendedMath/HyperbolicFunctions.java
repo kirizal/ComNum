@@ -1,7 +1,9 @@
 package ExtendedMath;
 
-public class HyperbolicFunctions
-{
+public class HyperbolicFunctions {
+	private HyperbolicFunctions() {}
+
+
 	// Гиперболический синус
 	public static double sh(double rad)
 	{

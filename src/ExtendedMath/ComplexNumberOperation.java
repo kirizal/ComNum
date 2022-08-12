@@ -1,25 +1,33 @@
 package ExtendedMath;
 
 public class ComplexNumberOperation {
+    private ComplexNumberOperation() {}
 
-    public static ComplexNumber sum(ComplexNumber num1, ComplexNumber num2) {
+
+
+
+    public static ComplexNumber getComplexConjugate(ComplexNumber num) {
+        return new ComplexNumber(ComplexNumberForm.Rectangular, num.Re(), -num.Im());
+    }
+
+
+
+
+    public static ComplexNumber add(ComplexNumber num1, ComplexNumber num2) {
         return new ComplexNumber(ComplexNumberForm.Rectangular,
                 num1.Re() + num2.Re(),
                 num1.Im() + num2.Im());
     }
-
     public static ComplexNumber sub(ComplexNumber num1, ComplexNumber num2) {
         return new ComplexNumber(ComplexNumberForm.Rectangular,
                 num1.Re() - num2.Re(),
                 num1.Im() - num2.Im());
     }
-
     public static ComplexNumber mul(ComplexNumber num1, ComplexNumber num2) {
         return new ComplexNumber(ComplexNumberForm.Rectangular,
                 num1.Re() * num2.Re() - num1.Im() * num2.Im(),
                 num1.Re() * num2.Im() + num2.Re() * num1.Im());
     }
-
     public static ComplexNumber div(ComplexNumber num1, ComplexNumber num2) throws Exception {
         if(num2.Re() == 0 && num2.Im() == 0) {
             throw new Exception("The divisor must have a non-zero real part or a non-zero imaginary part.");
