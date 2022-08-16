@@ -6,7 +6,7 @@ public class ConProgressBar extends ConControl {
 
 	private static final int MAX_PERCENTAGE = 100;
 	private static final int MIN_PERCENTAGE = 0;
-	private static final char Completed_block = '█';
+	private static final char Completed_block = '#';
 	private static final char Empty_block = ' ';
 	private int Percentage;
 

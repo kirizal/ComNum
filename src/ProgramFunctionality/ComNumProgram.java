@@ -9,4 +9,9 @@ public class ComNumProgram {
         memory = new Memory();
         state = ProgramState.ProcessingInput;
     }
+
+
+    public void Run(){
+
+    }
 }
