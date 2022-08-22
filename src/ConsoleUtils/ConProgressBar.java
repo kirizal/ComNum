@@ -7,14 +7,14 @@ public class ConProgressBar extends ConControl {
 	private static final int MAX_PERCENTAGE = 100;
 	private static final int MIN_PERCENTAGE = 0;
 	private static final char Completed_block = '#';
-	private static final char Empty_block = ' ';
+	private static final char Empty_block = '.';
 	private int Percentage;
 
 
 	public int getPercentage() { return this.Percentage; }
-	public void setPercentage(int perc) throws Exception {
-		if(perc > MAX_PERCENTAGE || perc < MIN_PERCENTAGE)
-			throw new Exception(String.format("The percentage of the ProgressBar must be in the interval [%d; %d]", MIN_PERCENTAGE, MAX_PERCENTAGE));
+	public void setPercentage(int perc) {
+		if(perc > MAX_PERCENTAGE) this.Percentage = MAX_PERCENTAGE;
+		else if(perc < MIN_PERCENTAGE) this.Percentage = MIN_PERCENTAGE;
 		else this.Percentage = perc;
 	}
 

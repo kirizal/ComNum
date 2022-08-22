@@ -87,15 +87,15 @@ public class ComplexNumber {
 		switch(form) {
 			case Rectangular:
 				if(this.Im() >= 0)
-					return String.format("%.3f + %.3f * i", this.a_coef, this.b_coef);
+					return String.format("%.3f+%.3f*i", this.a_coef, this.b_coef);
 				else
-					return String.format("%.3f - %.3f * i", this.a_coef, Math.abs(this.b_coef));
+					return String.format("%.3f-%.3f*i", this.a_coef, Math.abs(this.b_coef));
 
 			case Polar:
-				return String.format("%.3f * (cos(%.3f°) + i * sin(%.3f°))", r_coef, this.fi_angl_deg, this.fi_angl_deg);
+				return String.format("%.3f*(cos(%.3f)+i*sin(%.3f))", r_coef, this.fi_angl_deg, this.fi_angl_deg);
 
 			case Exponential:
-				return String.format("%.3f * exp(i * %.3f°)", this.r_coef, this.fi_angl_deg);
+				return String.format("%.3f*exp(i*%.3f)", this.r_coef, this.fi_angl_deg);
 
 			default:
 				return "Complex number not defined";
@@ -108,9 +108,9 @@ public class ComplexNumber {
 	public static String getAllForms(ComplexNumber num)
 	{
 		StringBuilder sb = new StringBuilder("");
-		sb.insert(sb.length(), String.format("Rectangular:\t" + num.ToString(ComplexNumberForm.Rectangular) + "\n"));
-		sb.insert(sb.length(), String.format("Polar       \t" + num.ToString(ComplexNumberForm.Polar) + "\n"));
-		sb.insert(sb.length(), String.format("Exponential:\t" + num.ToString(ComplexNumberForm.Exponential) + "\n\n"));
+		sb.insert(sb.length(), String.format("\tRectangular:\t" + num.ToString(ComplexNumberForm.Rectangular) + "\n"));
+		sb.insert(sb.length(), String.format("\tPolar       \t" + num.ToString(ComplexNumberForm.Polar) + "\n"));
+		sb.insert(sb.length(), String.format("\tExponential:\t" + num.ToString(ComplexNumberForm.Exponential) + "\n\n"));
 		return sb.toString();
 	}
 
