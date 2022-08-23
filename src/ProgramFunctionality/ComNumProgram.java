@@ -37,7 +37,9 @@ public class ComNumProgram {
             double codeExecuted = 1;
             int percantage = 0;
             for(String line: this.memory.getProgramCode()){
-                this.tryToExecuteCodeLine(line, (int)codeExecuted);
+                if(!line.isEmpty()){
+                    this.tryToExecuteCodeLine(line, (int)codeExecuted);
+                }
                 codeExecuted++;
                 percantage = (int)((codeExecuted - 1) / codeLength * 100.0);
                 this.progressBar.setPercentage(percantage);
@@ -46,11 +48,11 @@ public class ComNumProgram {
             }
 
             //Вывод в консоль результата работы программы
-            if(memory.getErrorLog().isEmpty()){
-                System.out.println("\n"+memory.getConsoleOutput());
+            if(this.memory.getErrorLog().isEmpty()){
+                System.out.println("\n"+this.memory.getConsoleOutput());
             }
             else{
-                System.out.println("\n"+memory.getErrorLog());
+                System.out.println("\n"+this.memory.getErrorLog());
             }
         }
     }
@@ -59,12 +61,12 @@ public class ComNumProgram {
 
     private void tryToExecuteCodeLine(String line, int lineNumber){
         try{
-            ArrayList<Token> tokenList = ComNumAlgorithm.Tokenization(line);
+            ArrayList<Token> tokenList = ComNumAlgorithm.Tokenization(line, this.memory);
             tokenList = ComNumAlgorithm.ShuntingYardAlgorithm(tokenList);
-            ComNumAlgorithm.CalculateExpressionInRPN(tokenList, memory);
+            ComNumAlgorithm.CalculateExpressionInRPN(tokenList, this.memory);
         }
         catch(Exception ex){
-            memory.addTextToErrorLog("line #" + lineNumber + ": " + createErrorMessage(ex.getMessage()));
+            this.memory.addTextToErrorLog("line #" + lineNumber + ":\t " + createErrorMessage(ex.getMessage()));
         }
     }
 

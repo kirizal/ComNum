@@ -28,6 +28,7 @@ public enum TokenType {
     ClosingBracket("\\)", (byte)1),
     Comma(",", (byte)0),
     Variable("[a-zA-Z]+\\w*", (byte)0),
+    Comment("#", (byte)0),
     Unknown(".+", (byte)0);
 
 

@@ -20,10 +20,10 @@ public class ComNumAlgorithm {
     private ComNumAlgorithm() {}
 
 
-    public static ArrayList<Token> Tokenization(String str) {
-        ArrayList<Token> resultTokenList = new ArrayList<Token>();
+    public static ArrayList<Token> Tokenization(String str, Memory memory) throws Exception {
+        ArrayList<Token> resultTokenList = new ArrayList<>();
         TokenType[] tokenTypeArr = TokenType.values();
-        String currentToken;
+        String currentTokenContent;
         Pattern pattern;
         Matcher matcher;
 
@@ -32,10 +32,16 @@ public class ComNumAlgorithm {
                 pattern = Pattern.compile('^' + tokenType.getRegEx());
                 matcher = pattern.matcher(str);
                 if (matcher.find()) {
-                    currentToken = matcher.group();
+                    currentTokenContent = matcher.group();
                     str = matcher.replaceAll("");
-                    if(tokenType != TokenType.Unnecessary) {
-                        resultTokenList.add(new Token(tokenType, currentToken));
+                    if(tokenType == TokenType.Comment){
+                        return resultTokenList;
+                    }
+                    else if(tokenType == TokenType.Unknown){
+                        throw new Exception("An unknown string token \"" + currentTokenContent + "\" was encountered.");
+                    }
+                    else if(tokenType != TokenType.Unnecessary) {
+                        resultTokenList.add(new Token(tokenType, currentTokenContent));
                     }
                     break;
                 }
@@ -119,7 +125,6 @@ public class ComNumAlgorithm {
     //Вычисление на стеке выражения в обратной польской записи
     public static void CalculateExpressionInRPN(ArrayList<Token> list, Memory memory) throws Exception{
         Stack<Token> stack = new Stack<>();
-        String exceptionMessage = "The number of operands does not match to the number of operations.";
         Token temp;
 
         for(Token token: list){
@@ -129,49 +134,49 @@ public class ComNumAlgorithm {
             else if(token.getType() == TokenType.Add){
                 if(stack.size() > 1){
                     temp = new Token(TokenType.ComLiteralRectangular,
-                            ComplexNumberOperation.add(getVariableOrLiteralValue(stack.pop(), memory),
-                            getVariableOrLiteralValue(stack.pop(), memory)).ToString());
+                            ComplexNumberOperation.add(getVariableOrLiteralValueFromToken(stack.pop(), memory),
+                            getVariableOrLiteralValueFromToken(stack.pop(), memory)).ToString());
                     stack.push(temp);
                 }
-                else throw  new Exception(exceptionMessage);
+                else throw  new Exception("The number of operands does not match to the number of operations.");
             }
             else if(token.getType() == TokenType.Sub){
                 if(stack.size() > 1){
                     Token op2 = stack.pop();
                     Token op1 = stack.pop();
                     temp = new Token(TokenType.ComLiteralRectangular,
-                            ComplexNumberOperation.sub(getVariableOrLiteralValue(op1, memory),
-                            getVariableOrLiteralValue(op2, memory)).ToString());
+                            ComplexNumberOperation.sub(getVariableOrLiteralValueFromToken(op1, memory),
+                            getVariableOrLiteralValueFromToken(op2, memory)).ToString());
                     stack.push(temp);
                 }
-                else throw  new Exception(exceptionMessage);
+                else throw  new Exception("The number of operands does not match to the number of operations.");
             }
             else if(token.getType() == TokenType.Mul){
                 if(stack.size() > 1){
                     temp = new Token(TokenType.ComLiteralRectangular,
-                            ComplexNumberOperation.mul(getVariableOrLiteralValue(stack.pop(), memory),
-                            getVariableOrLiteralValue(stack.pop(), memory)).ToString());
+                            ComplexNumberOperation.mul(getVariableOrLiteralValueFromToken(stack.pop(), memory),
+                            getVariableOrLiteralValueFromToken(stack.pop(), memory)).ToString());
                     stack.push(temp);
                 }
-                else throw  new Exception(exceptionMessage);
+                else throw  new Exception("The number of operands does not match to the number of operations.");
             }
             else if(token.getType() == TokenType.Div){
                 if(stack.size() > 1){
                     Token op2 = stack.pop();
                     Token op1 = stack.pop();
                     temp = new Token(TokenType.ComLiteralRectangular,
-                            ComplexNumberOperation.div(getVariableOrLiteralValue(op1, memory),
-                            getVariableOrLiteralValue(op2, memory)).ToString());
+                            ComplexNumberOperation.div(getVariableOrLiteralValueFromToken(op1, memory),
+                            getVariableOrLiteralValueFromToken(op2, memory)).ToString());
                     stack.push(temp);
                 }
-                else throw  new Exception(exceptionMessage);
+                else throw  new Exception("The number of operands does not match to the number of operations.");
             }
             else if(token.getType() == TokenType.Assignment){
                 if(stack.size() > 1){
                     Token op2 = stack.pop();
                     Token op1 = stack.pop();
                     if(op1.isVariable()){
-                        ComplexNumberVar var = new ComplexNumberVar(op1.getContent(), getVariableOrLiteralValue(op2, memory));
+                        ComplexNumberVar var = new ComplexNumberVar(op1.getContent(), getVariableOrLiteralValueFromToken(op2, memory));
                         if(memory.containsVariable(op1.getContent())){
                             memory.setNewVariableValue(var.getName(), var.getValue());
                         }
@@ -181,78 +186,76 @@ public class ComNumAlgorithm {
                     }
                     else throw new Exception("It is not possible to assign a value to a non-variable.");
                 }
-                else throw  new Exception(exceptionMessage);
+                else throw  new Exception("The number of operands does not match to the number of operations.");
             }
             else if(token.getType() == TokenType.Sin){
                 if(stack.size() > 0){
                     temp = new Token(TokenType.ComLiteralRectangular,
-                            ComplexNumberOperation.sin(getVariableOrLiteralValue(stack.pop(), memory)).ToString());
+                            ComplexNumberOperation.sin(getVariableOrLiteralValueFromToken(stack.pop(), memory)).ToString());
                     stack.push(temp);
                 }
-                else throw  new Exception(exceptionMessage);
+                else throw  new Exception("The number of operands does not match to the number of operations.");
             }
             else if(token.getType() == TokenType.Cos){
                 if(stack.size() > 0){
                     temp = new Token(TokenType.ComLiteralRectangular,
-                            ComplexNumberOperation.cos(getVariableOrLiteralValue(stack.pop(), memory)).ToString());
+                            ComplexNumberOperation.cos(getVariableOrLiteralValueFromToken(stack.pop(), memory)).ToString());
                     stack.push(temp);
                 }
-                else throw  new Exception(exceptionMessage);
+                else throw  new Exception("The number of operands does not match to the number of operations.");
             }
             else if(token.getType() == TokenType.Tg){
                 if(stack.size() > 0){
                     temp = new Token(TokenType.ComLiteralRectangular,
-                            ComplexNumberOperation.tg(getVariableOrLiteralValue(stack.pop(), memory)).ToString());
+                            ComplexNumberOperation.tg(getVariableOrLiteralValueFromToken(stack.pop(), memory)).ToString());
                     stack.push(temp);
                 }
-                else throw  new Exception(exceptionMessage);
+                else throw  new Exception("The number of operands does not match to the number of operations.");
             }
             else if(token.getType() == TokenType.Ctg){
                 if(stack.size() > 0){
                     temp = new Token(TokenType.ComLiteralRectangular,
-                            ComplexNumberOperation.ctg(getVariableOrLiteralValue(stack.pop(), memory)).ToString());
+                            ComplexNumberOperation.ctg(getVariableOrLiteralValueFromToken(stack.pop(), memory)).ToString());
                     stack.push(temp);
                 }
-                else throw  new Exception(exceptionMessage);
+                else throw  new Exception("The number of operands does not match to the number of operations.");
             }
-            // ?????????????
             else if (token.getType() == TokenType.Pown){
-                Token op2 = stack.pop();
-                Token op1 = stack.pop();
-                stack.push(new Token(TokenType.ComLiteralRectangular,
-                        ComplexNumberOperation.pown(op1.getComplexNumberFromToken(), )));
-
+                if(stack.size() > 1){
+                    int op2 = getIntegerFromComplexNumber(getVariableOrLiteralValueFromToken(stack.pop(), memory));
+                    ComplexNumber op1 = getVariableOrLiteralValueFromToken(stack.pop(), memory);
+                    stack.push(new Token(TokenType.ComLiteralRectangular,
+                            ComplexNumberOperation.pown(op1, op2).ToString()));
+                }
+                else throw new Exception("The number of operands does not match to the number of operations.");
             }
             else if(token.getType() == TokenType.PrintAllForms){
                 if(stack.size() > 0){
                     Token operand = stack.pop();
                     memory.addTextToConsoleOutput(
-                            "paf(" + operand.getContent() + "):\n" + ComplexNumber.getAllForms(
-                                    getVariableOrLiteralValue(operand, memory)));
+                            "\npaf(" + operand.getContent() + "):\n" + ComplexNumber.getAllForms(
+                                    getVariableOrLiteralValueFromToken(operand, memory)));
                 }
-                else throw  new Exception(exceptionMessage);
+                else throw  new Exception("The number of operands does not match to the number of operations.");
             }
             else if(token.getType() == TokenType.Print) {
                 if(stack.size() > 0){
                     Token operand = stack.pop();
                     memory.addTextToConsoleOutput(
-                            "print(" + operand.getContent() + "):\n\t" + (getVariableOrLiteralValue(operand, memory)).ToString());
+                            "\nprint(" + operand.getContent() + "):\n\t" + (getVariableOrLiteralValueFromToken(operand, memory)).ToString() + "\n");
                 }
-                else throw  new Exception(exceptionMessage);
+                else throw  new Exception("The number of operands does not match to the number of operations.");
             }
             else if(token.getType() == TokenType.PrintSqrtn){
                 if(stack.size() > 1) {
-                    Token op2 = stack.pop();
-                    Token op1 = stack.pop();
-                    memory.addTextToConsoleOutput("printSqrtn(" + op1.getContent() + ", " + op2.getContent() + "):\n");
-                    if (op2.getType() == TokenType.NumLiteral1) {
-                        for (ComplexNumber num : ComplexNumberOperation.sqrtn(getVariableOrLiteralValue(op1, memory), (int) Double.parseDouble(op2.getContent()))) {
-                            memory.addTextToConsoleOutput("\t" + num.ToString() + "\n");
-                        }
+                    int op2 = getIntegerFromComplexNumber(getVariableOrLiteralValueFromToken(stack.pop(), memory));
+                    ComplexNumber op1 = getVariableOrLiteralValueFromToken(stack.pop(), memory);
+                    memory.addTextToConsoleOutput("\nprintSqrtn(" + op1.toString() + ", " + op2 + "):\n");
+                    for (ComplexNumber num : ComplexNumberOperation.sqrtn(op1, op2)) {
+                        memory.addTextToConsoleOutput("\t" + num.ToString() + "\n");
                     }
-                    else throw new Exception("The second parameter in the \"printSqrtn\" function must be a positive integer literal.");
                 }
-                else throw  new Exception(exceptionMessage);
+                else throw  new Exception("The number of operands does not match to the number of operations.");
             }
             else if(token.getType() == TokenType.ComplexConjugate){
                 if(stack.size() > 0) {
@@ -265,7 +268,7 @@ public class ComNumAlgorithm {
                             stack.push(new Token(
                                     TokenType.ComLiteralRectangular,
                                     ComplexNumberOperation.getComplexConjugate(
-                                            getVariableOrLiteralValue(operand, memory)).ToString()));
+                                            getVariableOrLiteralValueFromToken(operand, memory)).ToString()));
                         }
                         case Variable -> {
                             ComplexNumber cn = memory.getValueOfVariable(operand.getContent());
@@ -278,7 +281,7 @@ public class ComNumAlgorithm {
                         }
                     }
                 }
-                else throw  new Exception(exceptionMessage);
+                else throw  new Exception("The number of operands does not match to the number of operations.");
             }
         }
     }
@@ -286,7 +289,7 @@ public class ComNumAlgorithm {
 
 
 
-    private static ComplexNumber getVariableOrLiteralValue(Token token, Memory memory) throws Exception{
+    private static ComplexNumber getVariableOrLiteralValueFromToken(Token token, Memory memory) throws Exception{
         if(token.isVariable()){
             return memory.getValueOfVariable(token.getContent());
         }
@@ -294,5 +297,14 @@ public class ComNumAlgorithm {
             return token.getComplexNumberFromToken();
         }
         throw new Exception("The \"getTokenValue()\" function is not applicable to a token with the " + token.getType() + " type.");
+    }
+
+
+
+    private static int getIntegerFromComplexNumber(ComplexNumber cn) throws Exception{
+        if(cn.Im() == 0.0){
+            return (int)cn.Re();
+        }
+        else throw  new Exception("The complex number \"" + cn.ToString() + "\" cannot be converted to 'double'.");
     }
 }

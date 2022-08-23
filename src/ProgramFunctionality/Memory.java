@@ -1,6 +1,5 @@
 package ProgramFunctionality;
 import ExtendedMath.ComplexNumber;
-import ProgramFunctionality.Algorithms.Token;
 import ProgramFunctionality.Variables.ComplexNumberVar;
 import ProgramFunctionality.Variables.*;
 
@@ -40,7 +39,7 @@ public class Memory {
 
     public ComplexNumber getValueOfVariable(String name) throws Exception{
         for(Variable var: this.VariableList){
-            if(var.getName() == name){
+            if(var.getName().equals(name)){
                 if(var instanceof ComplexNumberVar){
                     ComplexNumberVar temp = (ComplexNumberVar)var;
                     return temp.getValue();
@@ -57,7 +56,7 @@ public class Memory {
 
 
 
-    public void createNewVariable(Variable var) throws Exception{
+    public void createNewVariable(Variable var) {
         this.VariableList.add(var);
     }
     public void setNewVariableValue(String varName, ComplexNumber value) {
@@ -77,12 +76,6 @@ public class Memory {
 
 
 
-    public static boolean TypeCheck(Variable var1, Variable var2){
-        return var1.getType() == var2.getType();
-    }
-
-
-
     public String getConsoleOutput(){
         return this.ConsoleOutput.toString();
     }
@@ -98,7 +91,5 @@ public class Memory {
     public void addTextToConsoleOutput(String text){
         this.ConsoleOutput.append(text);
     }
-    public void addTextToErrorLog(String text){
-        this.ErrorLog.append(text);
-    }
+    public void addTextToErrorLog(String text) { this.ErrorLog.append(text); }
 }

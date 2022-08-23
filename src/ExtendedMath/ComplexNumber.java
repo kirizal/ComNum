@@ -1,5 +1,9 @@
 package ExtendedMath;
 import java.lang.Math;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+import java.util.Locale;
+
 
 public class ComplexNumber {
 
@@ -87,15 +91,29 @@ public class ComplexNumber {
 		switch(form) {
 			case Rectangular:
 				if(this.Im() >= 0)
-					return String.format("%.3f+%.3f*i", this.a_coef, this.b_coef);
+					return String.format("%s+%s*i",
+							ConvertDoubleToString(this.a_coef),
+							ConvertDoubleToString(this.b_coef));
 				else
-					return String.format("%.3f-%.3f*i", this.a_coef, Math.abs(this.b_coef));
+					return String.format("%s-%s*i",
+							ConvertDoubleToString(this.a_coef),
+							ConvertDoubleToString(Math.abs(this.b_coef)));
 
 			case Polar:
-				return String.format("%.3f*(cos(%.3f)+i*sin(%.3f))", r_coef, this.fi_angl_deg, this.fi_angl_deg);
+				return String.format("%s*(cos(%s)+i*sin(%s))",
+						ConvertDoubleToString(this.r_coef),
+						ConvertDoubleToString(this.fi_angl_deg),
+						ConvertDoubleToString(this.fi_angl_deg));
 
 			case Exponential:
-				return String.format("%.3f*exp(i*%.3f)", this.r_coef, this.fi_angl_deg);
+				if(this.Im() > 0)
+					return String.format("%s*exp(i*%s)",
+							ConvertDoubleToString(this.r_coef),
+							ConvertDoubleToString(this.fi_angl_deg));
+				else
+					return String.format("%s*exp(i*(%s))",
+							ConvertDoubleToString(this.r_coef),
+							ConvertDoubleToString(this.fi_angl_deg));
 
 			default:
 				return "Complex number not defined";
@@ -132,4 +150,12 @@ public class ComplexNumber {
 		}
 	}
 
+
+	// Метод, созданный для того, чтобы в строковом представлении дробных чисел
+	// разделителем целой и дробной части был символ '.', а не ','.
+	// В таком случае не будет рассогласования между методами double.toString() и
+	// Double.parseDouble()
+	private static String ConvertDoubleToString(double num){
+		return String.format("%.3f", num).replace(',', '.');
+	}
 }
