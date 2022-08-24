@@ -15,6 +15,7 @@ import java.util.regex.Pattern;
     Статический класс реализующий:
     1) Токенизацию строк кода, полученных из файлы;
     2) Алгоритм сортирововчной станции для приведения сложных выражений к постфиксной форме записи;
+    3) Вычисление выражений, записанных в постфиксной форме
  */
 public class ComNumAlgorithm {
     private ComNumAlgorithm() {}
@@ -177,12 +178,7 @@ public class ComNumAlgorithm {
                     Token op1 = stack.pop();
                     if(op1.isVariable()){
                         ComplexNumberVar var = new ComplexNumberVar(op1.getContent(), getVariableOrLiteralValueFromToken(op2, memory));
-                        if(memory.containsVariable(op1.getContent())){
-                            memory.setNewVariableValue(var.getName(), var.getValue());
-                        }
-                        else {
-                            memory.createNewVariable(var);
-                        }
+                        memory.setNewVariableValue(var.getName(), var.getValue());
                     }
                     else throw new Exception("It is not possible to assign a value to a non-variable.");
                 }
@@ -190,39 +186,71 @@ public class ComNumAlgorithm {
             }
             else if(token.getType() == TokenType.Sin){
                 if(stack.size() > 0){
-                    temp = new Token(TokenType.ComLiteralRectangular,
-                            ComplexNumberOperation.sin(getVariableOrLiteralValueFromToken(stack.pop(), memory)).ToString());
+                    ComplexNumber operand = getVariableOrLiteralValueFromToken(stack.pop(), memory);
+                    if(operand.Im() == 0.0){
+                        temp = new Token(TokenType.ComLiteralRectangular,
+                                new ComplexNumber(ComplexNumberForm.Rectangular,
+                                        Math.sin(Math.toRadians(operand.Re())), 0.0).ToString());
+                    }
+                    else {
+                        temp = new Token(TokenType.ComLiteralRectangular,
+                                ComplexNumberOperation.sin(operand).ToString());
+                    }
                     stack.push(temp);
                 }
                 else throw  new Exception("The number of operands does not match to the number of operations.");
             }
             else if(token.getType() == TokenType.Cos){
                 if(stack.size() > 0){
-                    temp = new Token(TokenType.ComLiteralRectangular,
-                            ComplexNumberOperation.cos(getVariableOrLiteralValueFromToken(stack.pop(), memory)).ToString());
+                    ComplexNumber operand = getVariableOrLiteralValueFromToken(stack.pop(), memory);
+                    if(operand.Im() == 0.0){
+                        temp = new Token(TokenType.ComLiteralRectangular,
+                                new ComplexNumber(ComplexNumberForm.Rectangular,
+                                        Math.cos(Math.toRadians(operand.Re())), 0.0).ToString());
+                    }
+                    else {
+                        temp = new Token(TokenType.ComLiteralRectangular,
+                                ComplexNumberOperation.cos(operand).ToString());
+                    }
                     stack.push(temp);
                 }
                 else throw  new Exception("The number of operands does not match to the number of operations.");
             }
             else if(token.getType() == TokenType.Tg){
                 if(stack.size() > 0){
-                    temp = new Token(TokenType.ComLiteralRectangular,
-                            ComplexNumberOperation.tg(getVariableOrLiteralValueFromToken(stack.pop(), memory)).ToString());
+                    ComplexNumber operand = getVariableOrLiteralValueFromToken(stack.pop(), memory);
+                    if(operand.Im() == 0.0){
+                        temp = new Token(TokenType.ComLiteralRectangular,
+                                new ComplexNumber(ComplexNumberForm.Rectangular,
+                                        Math.tan(Math.toRadians(operand.Re())), 0.0).ToString());
+                    }
+                    else {
+                        temp = new Token(TokenType.ComLiteralRectangular,
+                                ComplexNumberOperation.tg(operand).ToString());
+                    }
                     stack.push(temp);
                 }
                 else throw  new Exception("The number of operands does not match to the number of operations.");
             }
             else if(token.getType() == TokenType.Ctg){
                 if(stack.size() > 0){
-                    temp = new Token(TokenType.ComLiteralRectangular,
-                            ComplexNumberOperation.ctg(getVariableOrLiteralValueFromToken(stack.pop(), memory)).ToString());
+                    ComplexNumber operand = getVariableOrLiteralValueFromToken(stack.pop(), memory);
+                    if(operand.Im() == 0.0){
+                        temp = new Token(TokenType.ComLiteralRectangular,
+                                new ComplexNumber(ComplexNumberForm.Rectangular,
+                                        1.0 / Math.tan(Math.toRadians(operand.Re())), 0.0).ToString());
+                    }
+                    else {
+                        temp = new Token(TokenType.ComLiteralRectangular,
+                                ComplexNumberOperation.ctg(operand).ToString());
+                    }
                     stack.push(temp);
                 }
                 else throw  new Exception("The number of operands does not match to the number of operations.");
             }
             else if (token.getType() == TokenType.Pown){
                 if(stack.size() > 1){
-                    int op2 = getIntegerFromComplexNumber(getVariableOrLiteralValueFromToken(stack.pop(), memory));
+                    int op2 = getIntegerFromComplexNumber(getVariableOrLiteralValueFromToken(stack.pop(), memory), "pown");
                     ComplexNumber op1 = getVariableOrLiteralValueFromToken(stack.pop(), memory);
                     stack.push(new Token(TokenType.ComLiteralRectangular,
                             ComplexNumberOperation.pown(op1, op2).ToString()));
@@ -231,26 +259,26 @@ public class ComNumAlgorithm {
             }
             else if(token.getType() == TokenType.PrintAllForms){
                 if(stack.size() > 0){
-                    Token operand = stack.pop();
+                    temp = stack.pop();
                     memory.addTextToConsoleOutput(
-                            "\npaf(" + operand.getContent() + "):\n" + ComplexNumber.getAllForms(
-                                    getVariableOrLiteralValueFromToken(operand, memory)));
+                            "\npaf(" + temp.getContent() + "):\n" + ComplexNumber.getAllForms(
+                                    getVariableOrLiteralValueFromToken(temp, memory)));
                 }
                 else throw  new Exception("The number of operands does not match to the number of operations.");
             }
             else if(token.getType() == TokenType.Print) {
                 if(stack.size() > 0){
-                    Token operand = stack.pop();
+                    temp = stack.pop();
                     memory.addTextToConsoleOutput(
-                            "\nprint(" + operand.getContent() + "):\n\t" + (getVariableOrLiteralValueFromToken(operand, memory)).ToString() + "\n");
+                            "\nprint(" + temp.getContent() + "):\n\t" + (getVariableOrLiteralValueFromToken(temp, memory)).ToString() + "\n");
                 }
                 else throw  new Exception("The number of operands does not match to the number of operations.");
             }
             else if(token.getType() == TokenType.PrintSqrtn){
                 if(stack.size() > 1) {
-                    int op2 = getIntegerFromComplexNumber(getVariableOrLiteralValueFromToken(stack.pop(), memory));
+                    int op2 = getIntegerFromComplexNumber(getVariableOrLiteralValueFromToken(stack.pop(), memory), "printSqrtn");
                     ComplexNumber op1 = getVariableOrLiteralValueFromToken(stack.pop(), memory);
-                    memory.addTextToConsoleOutput("\nprintSqrtn(" + op1.toString() + ", " + op2 + "):\n");
+                    memory.addTextToConsoleOutput("\nprintSqrtn(" + op1.ToString(ComplexNumberForm.Polar) + ", " + op2 + "):\n");
                     for (ComplexNumber num : ComplexNumberOperation.sqrtn(op1, op2)) {
                         memory.addTextToConsoleOutput("\t" + num.ToString() + "\n");
                     }
@@ -259,8 +287,8 @@ public class ComNumAlgorithm {
             }
             else if(token.getType() == TokenType.ComplexConjugate){
                 if(stack.size() > 0) {
-                    Token operand = stack.pop();
-                    switch (operand.getType()){
+                    temp = stack.pop();
+                    switch (temp.getType()){
                         // Для комплексных литералов условно выбранный знак '$'
                         // будет значить, преобразование к комплексно сопряжённому числу
                         case ComLiteralRectangular, ComLiteralExponential1,
@@ -268,16 +296,16 @@ public class ComNumAlgorithm {
                             stack.push(new Token(
                                     TokenType.ComLiteralRectangular,
                                     ComplexNumberOperation.getComplexConjugate(
-                                            getVariableOrLiteralValueFromToken(operand, memory)).ToString()));
+                                            getVariableOrLiteralValueFromToken(temp, memory)).ToString()));
                         }
                         case Variable -> {
-                            ComplexNumber cn = memory.getValueOfVariable(operand.getContent());
+                            ComplexNumber cn = memory.getValueOfVariable(temp.getContent());
                             stack.push(new Token(TokenType.ComLiteralRectangular,
                                   (new ComplexNumber(ComplexNumberForm.Rectangular, cn.Re(), cn.Im()))
                                           .ToString(ComplexNumberForm.Rectangular)));
                         }
                         default -> {
-                            throw new Exception("The operation of obtaining a complex conjugate number \"$\" cannot be applied to the operand \"" + operand.getContent() + "\"");
+                            throw new Exception("The operation of obtaining a complex conjugate number \"$\" cannot be applied to the operand \"" + temp.getContent() + "\"");
                         }
                     }
                 }
@@ -301,10 +329,16 @@ public class ComNumAlgorithm {
 
 
 
-    private static int getIntegerFromComplexNumber(ComplexNumber cn) throws Exception{
+    private static int getIntegerFromComplexNumber(ComplexNumber cn, String funcName) throws Exception{
         if(cn.Im() == 0.0){
             return (int)cn.Re();
         }
-        else throw  new Exception("The complex number \"" + cn.ToString() + "\" cannot be converted to 'double'.");
+        else throw  new Exception("The complex number \"" + cn.ToString() + "\" cannot be converted to an integer for the function \"" + funcName + "\".");
+    }
+    private static double getDoubleFromComplexNumber(ComplexNumber cn, String funcName) throws Exception{
+        if(cn.Im() == 0.0){
+            return cn.Re();
+        }
+        else throw new Exception("\"The complex number \"" + cn.ToString() + "\" cannot be converted to an fractional number for the function \"" + funcName + "\".");
     }
 }

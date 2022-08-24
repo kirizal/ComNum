@@ -32,7 +32,7 @@ public class Token {
         //Для поиска коэффициентов комплексного числа в поле Content токена
         Pattern pattern = Pattern.compile(TokenType.NumLiteral2.getRegEx());
         Matcher matcher = pattern.matcher(this.Content);
-        double[] coefficients = new double[2];
+        double[] coefficients = new double[3];
 
 
         switch (this.Type) {
@@ -47,12 +47,17 @@ public class Token {
             }
             case ComLiteralPolar1, ComLiteralPolar2 -> {
                 matcher.find();                                             //
-                coefficients[0] = Double.parseDouble(matcher.group());      // Поиск
-                matcher.find();                                             // коэффциентов
-                coefficients[1] = Double.parseDouble(matcher.group());      //
-                return new ComplexNumber(ComplexNumberForm.Polar,
-                        coefficients[0],
-                        coefficients[1]);
+                coefficients[0] = Double.parseDouble(matcher.group());      //
+                matcher.find();                                             // Поиск
+                coefficients[1] = Double.parseDouble(matcher.group());      // коэффциентов
+                matcher.find();                                             //
+                coefficients[2] = Double.parseDouble(matcher.group());      //
+                if(coefficients[1] == coefficients[2]) {
+                    return new ComplexNumber(ComplexNumberForm.Polar,
+                            coefficients[0],
+                            coefficients[1]);
+                }
+                else throw new Exception("In the polar form of writing a complex number, the argument in the sin() and cos() functions must be the same.");
             }
             case ComLiteralExponential1, ComLiteralExponential2 -> {
                 matcher.find();                                             //

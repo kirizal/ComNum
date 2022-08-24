@@ -87,4 +87,38 @@ public class ConProgressBar extends ConControl {
 
 		System.out.print(sb);
 	}
+
+
+	@Override
+	public void printControlWithoutColors(){
+		int freeBlocks;
+		int blockCount;
+		String output;
+		StringBuilder sb;
+
+		if(this.getWidth() >= 15) {
+			output = String.format("%3d%% [", this.Percentage);
+			sb = new StringBuilder(output);
+			freeBlocks = this.getWidth() - 1 - 7;		// 7 - кол-во символов на вывод процентажа
+			// загрузки и границ ProgressBar'a
+			blockCount = (int)((double)this.Percentage/(double)MAX_PERCENTAGE * (double)freeBlocks);
+
+			// Добавление символов, характеризующих загрузку
+			for(int i = 0; i <= blockCount; i++) {
+				sb.insert(sb.length(), Completed_block);
+			}
+			// Добавление символов пробела (для обозначения незаполненности ProgressBar'a)
+			for(int j = 7 + blockCount; j < this.getWidth() - 1; j++) {
+				sb.insert(sb.length(), Empty_block);
+			}
+			sb.insert(sb.length(), "]");
+		}
+		else {
+			output = String.format("%3d%%", this.Percentage);
+			sb = new StringBuilder(output);
+		}
+
+
+		System.out.print(sb);
+	}
 }

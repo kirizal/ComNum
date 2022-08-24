@@ -27,12 +27,14 @@ public class ComNumProgram {
             this.fileManager = new FileManager(fileName);
             this.progressBar = new ConProgressBar("pb", 60, 0, ConColor.ANSI_RESET, ConColor.ANSI_FOREGROUND_GREEN);
             this.memory.setProgramCode(this.fileManager.getTextFromCurrentFile());
+            System.out.println("\n---------------| " + fileName + " |---------------");
+            System.out.println("Processing file contents:");
             if(this.memory.getProgramCode().isEmpty()){
-                this.memory.addTextToErrorLog(createErrorMessage("The file named \"" + fileName + "\" either could not be found, or it is empty."));
+                this.memory.addTextToErrorLog("The file named \"" + fileName + "\" either could not be found, or it is empty.");
             }
 
             //Попытка выполнения всех строк кода с фиксацией ошибок
-            this.progressBar.printControl();
+            this.progressBar.printControlWithoutColors();
             double codeLength = this.memory.getProgramCode().size();
             double codeExecuted = 1;
             int percantage = 0;
@@ -44,7 +46,7 @@ public class ComNumProgram {
                 percantage = (int)((codeExecuted - 1) / codeLength * 100.0);
                 this.progressBar.setPercentage(percantage);
                 System.out.print("\r");
-                this.progressBar.printControl();
+                this.progressBar.printControlWithoutColors();
             }
 
             //Вывод в консоль результата работы программы
@@ -52,7 +54,8 @@ public class ComNumProgram {
                 System.out.println("\n"+this.memory.getConsoleOutput());
             }
             else{
-                System.out.println("\n"+this.memory.getErrorLog());
+                System.out.println("\n --= ERRORS =--");
+                System.out.println(""+this.memory.getErrorLog());
             }
         }
     }
@@ -66,18 +69,11 @@ public class ComNumProgram {
             ComNumAlgorithm.CalculateExpressionInRPN(tokenList, this.memory);
         }
         catch(Exception ex){
-            this.memory.addTextToErrorLog("line #" + lineNumber + ":\t " + createErrorMessage(ex.getMessage()));
+            String exMessage = ex.getMessage();
+            if(exMessage.equals("The variable \"i\" is not initialized.")){
+                exMessage = "An error in the polar or exponential form of complex number.\n\t\t\t Check that the first multiplier is positive, and the arguments of the sin() and cos() in polar form match.\n";
+            }
+            this.memory.addTextToErrorLog("line #" + lineNumber + ":\t " + exMessage);
         }
-    }
-
-
-
-    private static String createFileNameMessage(String text){
-        return ConColor.ANSI_FOREGROUND_CYAN.getANSI_Color() +
-               "\n" + text + ":\n" + ConColor.ANSI_RESET.getANSI_Color();
-    }
-    private static String createErrorMessage(String text){
-        return ConColor.ANSI_FOREGROUND_RED.getANSI_Color() +
-               text + "\n" + ConColor.ANSI_RESET.getANSI_Color();
     }
 }

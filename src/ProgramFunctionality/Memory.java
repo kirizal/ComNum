@@ -29,7 +29,7 @@ public class Memory {
     public boolean containsVariable(String name){
         boolean result = false;
         for (Variable var: this.VariableList){
-            if(var.getName() == name) result = true;
+            if(var.getName().equals(name)) result = true;
             break;
         }
         return result;
@@ -44,11 +44,6 @@ public class Memory {
                     ComplexNumberVar temp = (ComplexNumberVar)var;
                     return temp.getValue();
                 }
-                //Тип NumberVar всегда преобразуется к типу ComplexNumberVar
-                else if(var instanceof NumberVar){
-                    NumberVar temp = (NumberVar)var;
-                    return temp.ConvertToComplexNumber();
-                }
             }
         }
         throw new Exception("The variable \"" + name + "\" is not initialized.");
@@ -61,17 +56,13 @@ public class Memory {
     }
     public void setNewVariableValue(String varName, ComplexNumber value) {
         for(Variable var: this.VariableList){
-            if(var.getName() == varName){
-                var = new ComplexNumberVar(varName, value);
+            if(var.getName().equals(varName)){
+                var.setValue(value);
+                return;
             }
         }
-    }
-    public void setNewVariableValue(String varName, double value) {
-        for(Variable var: this.VariableList) {
-            if (var.getName() == varName) {
-                var = new NumberVar(varName, value);
-            }
-        }
+        ComplexNumberVar newVar = new ComplexNumberVar(varName, value);
+        this.createNewVariable(newVar);
     }
 
 
@@ -91,5 +82,7 @@ public class Memory {
     public void addTextToConsoleOutput(String text){
         this.ConsoleOutput.append(text);
     }
-    public void addTextToErrorLog(String text) { this.ErrorLog.append(text); }
+    public void addTextToErrorLog(String text) {
+        this.ErrorLog.append(text);
+    }
 }

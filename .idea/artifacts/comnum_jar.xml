@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="comnum:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/comnum_jar</output-path>
+    <root id="archive" name="comnum.jar">
+      <element id="module-output" name="comnum" />
+    </root>
+  </artifact>
+</component>
