@@ -1,4 +1,5 @@
 package ProgramFunctionality.Algorithms;
+
 import ExtendedMath.ComplexNumberForm;
 import ExtendedMath.ComplexNumberOperation;
 import ExtendedMath.ComplexNumber;
@@ -301,8 +302,7 @@ public class ComNumAlgorithm {
                         case Variable -> {
                             ComplexNumber cn = memory.getValueOfVariable(temp.getContent());
                             stack.push(new Token(TokenType.ComLiteralRectangular,
-                                  (new ComplexNumber(ComplexNumberForm.Rectangular, cn.Re(), cn.Im()))
-                                          .ToString(ComplexNumberForm.Rectangular)));
+                                  (ComplexNumberOperation.getComplexConjugate(cn).ToString())));
                         }
                         default -> {
                             throw new Exception("The operation of obtaining a complex conjugate number \"$\" cannot be applied to the operand \"" + temp.getContent() + "\"");

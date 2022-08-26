@@ -3,6 +3,8 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.util.ArrayList;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class FileManager {
 
@@ -35,5 +37,11 @@ public class FileManager {
             System.out.println(ex.getMessage());
         }
         return list;
+    }
+
+    public boolean CheckFileExtension(){
+        Pattern pattern = Pattern.compile(".+\\.cnum");
+        Matcher matcher = pattern.matcher(this.currentFile.getName());
+        return matcher.matches();
     }
 }

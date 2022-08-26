@@ -26,6 +26,7 @@ public class ComNumProgram {
             this.memory = new Memory();
             this.fileManager = new FileManager(fileName);
             this.progressBar = new ConProgressBar("pb", 60, 0, ConColor.ANSI_RESET, ConColor.ANSI_FOREGROUND_GREEN);
+            if(!this.fileManager.CheckFileExtension()) this.memory.addTextToErrorLog("The input file extension should be \"*.cnum\".\n");
             this.memory.setProgramCode(this.fileManager.getTextFromCurrentFile());
             System.out.println("\n---------------| " + fileName + " |---------------");
             System.out.println("Processing file contents:");
@@ -51,11 +52,11 @@ public class ComNumProgram {
 
             //Вывод в консоль результата работы программы
             if(this.memory.getErrorLog().isEmpty()){
-                System.out.println("\n"+this.memory.getConsoleOutput());
+                System.out.println("\n"+this.memory.getConsoleOutput() + "\n\n\n");
             }
             else{
                 System.out.println("\n --= ERRORS =--");
-                System.out.println(""+this.memory.getErrorLog());
+                System.out.println(""+this.memory.getErrorLog() + "\n\n\n");
             }
         }
     }
@@ -71,7 +72,7 @@ public class ComNumProgram {
         catch(Exception ex){
             String exMessage = ex.getMessage();
             if(exMessage.equals("The variable \"i\" is not initialized.")){
-                exMessage = "An error in the polar or exponential form of complex number.\n\t\t\t Check that the first multiplier is positive, and the arguments of the sin() and cos() in polar form match.\n";
+                exMessage = "An error in the polar or exponential form of complex number.\n\t\t Check that the first multiplier is positive, and the arguments\n\t\t of the sin() and cos() in polar form match.\n";
             }
             this.memory.addTextToErrorLog("line #" + lineNumber + ":\t " + exMessage);
         }

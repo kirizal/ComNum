@@ -8,8 +8,7 @@ public enum TokenType {
     ComLiteralExponential1("\\d+\\.\\d+\\*exp\\(i\\*\\d+\\.\\d+\\)", (byte)0),
     ComLiteralExponential2("\\d+\\.\\d+\\*exp\\(i\\*\\(-\\d+\\.\\d+\\)\\)", (byte)0),
     NumLiteral1("\\d+\\.\\d+", (byte)0),
-    NumLiteral2("-?\\d+\\.\\d+", (byte)0),    //Используется только для перевода строковой формы записи
-                                                    //комлпексного числа в объект класса ComplexNumber
+    NumLiteral2("-?\\d+\\.\\d+", (byte)0),
     Sin("sin", (byte)0),
     Cos("cos", (byte)0),
     Tg("tg", (byte)0),

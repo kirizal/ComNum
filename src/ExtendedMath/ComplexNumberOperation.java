@@ -30,7 +30,7 @@ public class ComplexNumberOperation {
     }
     public static ComplexNumber div(ComplexNumber num1, ComplexNumber num2) throws Exception {
         if(num2.Re() == 0 && num2.Im() == 0) {
-            throw new Exception("The divisor must have a non-zero real part or a non-zero imaginary part.");
+            throw new Exception("The divisor must have a non-zero real part or a non-zero\n\t\t imaginary part.\n");
         }
         else {
             return new ComplexNumber(ComplexNumberForm.Rectangular,

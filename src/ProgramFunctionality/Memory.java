@@ -1,9 +1,8 @@
 package ProgramFunctionality;
 import ExtendedMath.ComplexNumber;
-import ProgramFunctionality.Variables.ComplexNumberVar;
 import ProgramFunctionality.Variables.*;
-
 import java.util.ArrayList;
+
 
 public class Memory {
     private ArrayList<Variable> VariableList;
